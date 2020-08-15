@@ -3,7 +3,9 @@ package com.Utility;
 import java.awt.image.BufferedImage;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.Duration;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageOutputStream;
@@ -18,6 +20,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Select;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -35,6 +38,7 @@ public class Keyword {
 	public static List<WebElement> elements;
 	public static AShot ashot;
 	public static Alert alert;
+	public static FluentWait wait;
 
 	/*
 	 * This method will launch the given Browser
@@ -83,7 +87,8 @@ public class Keyword {
 	}
 
 	/*
-	 * This method will delete all the  cookies i.e. the password, the id for all the websites stored in the browser
+	 * This method will delete all the cookies i.e. the password, the id for all the
+	 * websites stored in the browser
 	 */
 	public static void deleteCookies() {
 
@@ -369,12 +374,21 @@ public class Keyword {
 	 * the WebPage will be scrolled vertically
 	 * 
 	 * @Param:Takes argument as int value i i.e. the length in pixel value by which
-	 * the WebPage will be scrolled horizontally. The value we get has to be verified
-	 * against the specification for exact location of this WebElement
+	 * the WebPage will be scrolled horizontally
 	 */
 	public static void scrolltheWebPage(int i, int j) {
 		JavascriptExecutor js = (JavascriptExecutor) driver;
 		js.executeScript("window.scrollBy(i,j)");
+	}
+
+	/*
+	 * This method will apply implicit wait to the current instance of the driver
+	 * 
+	 * @Param:This method accepts argument int value as time in seconds for which
+	 * the thread will wait
+	 */
+	public static void implicitWait(int timeinSeconds) {
+		driver.manage().timeouts().implicitlyWait(timeinSeconds, TimeUnit.SECONDS);
 	}
 
 	/*
