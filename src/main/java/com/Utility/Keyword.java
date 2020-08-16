@@ -4,10 +4,12 @@ import java.awt.image.BufferedImage;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageOutputStream;
 
+import org.apache.log4j.Logger;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -19,6 +21,10 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.Select;
+
+import com.aventstack.extentreports.ExtentReports;
+import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import ru.yandex.qatools.ashot.AShot;
@@ -35,6 +41,12 @@ public class Keyword {
 	public static List<WebElement> elements;
 	public static AShot ashot;
 	public static Alert alert;
+	public static String parentwindowhandle;
+	public static Set<String> allindowhandles;
+	public static Logger log = Logger.getLogger(Keyword.class);
+	public static ExtentHtmlReporter htmlReporter;
+	public static ExtentReports extent;
+	public static ExtentTest extentLog, tempextentLog;
 
 	/*
 	 * This method will launch the given Browser
@@ -392,6 +404,33 @@ public class Keyword {
 	 */
 	public static void closeAllWindows() {
 		driver.quit();
+	}
+	
+	public void switchToPopupWindow() {
+		parentwindowhandle = driver.getWindowHandle();
+		allindowhandles = driver.getWindowHandles();
+		for (String window : allindowhandles) {
+			if (!driver.switchTo().window(window).getWindowHandle().equals(parentwindowhandle)) {
+				log.info("Switched to " + driver.getTitle() + " window");
+				break;
+			}
+		}
+	}
+
+	public void switchToPopupWindow(String windowtitle) {
+		parentwindowhandle = driver.getWindowHandle();
+		allindowhandles = driver.getWindowHandles();
+		for (String window : allindowhandles) {
+			if (driver.switchTo().window(window).getTitle().contains(windowtitle)) {
+				log.info("Switched to " + driver.getTitle() + " window");
+				break;
+			}
+		}
+	}
+
+	public void switchToMainWindow() {
+		driver.switchTo().window(parentwindowhandle);
+		log.info("Switching to main window");
 	}
 
 }
