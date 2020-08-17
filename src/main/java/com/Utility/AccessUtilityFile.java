@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
+import java.util.Scanner;
 
 /*This class is used for accessing data from a common object repository which will be used to store objects which are common to all 
  * 
@@ -61,4 +62,43 @@ public class AccessUtilityFile {
 
 	}
 
+	/**
+	 * This is a method regarding reading CSV file.
+	 * @param It accepts parameter as String path
+	 * @author chirde Sampada
+	 */
+	public void csvFileReader(String path) {
+		Scanner sc=new Scanner(System.in);
+		sc.useDelimiter(","); //sets delimiter pattern
+		while(sc.hasNext())
+		{
+			System.out.println(sc.next());
+		}
+		sc.close();
+	}
+	
+	
+	
+	
+	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

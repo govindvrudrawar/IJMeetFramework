@@ -1,7 +1,17 @@
 package com.Utility;
 
+
+import java.awt.image.BufferedImage;
+import java.io.FileNotFoundException;
+
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
+
+
+import java.io.Reader;
+import java.time.Duration;
+
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -10,6 +20,7 @@ import javax.imageio.ImageIO;
 
 import org.apache.log4j.Logger;
 import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -17,8 +28,21 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.interactions.Actions;
+
 import org.openqa.selenium.support.events.EventFiringWebDriver;
+
+
+import org.openqa.selenium.support.ui.ExpectedConditions;
+
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+
+import org.openqa.selenium.support.ui.FluentWait;
+
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import com.opencsv.CSVReader;
+
 import org.testng.annotations.Listeners;
 
 import com.aventstack.extentreports.ExtentReports;
@@ -30,7 +54,7 @@ import ru.yandex.qatools.ashot.AShot;
 import ru.yandex.qatools.ashot.Screenshot;
 import ru.yandex.qatools.ashot.shooting.ShootingStrategies;
 
-@Listeners(com.Utility.TestListener.class)
+
 public class Keyword {
 
 	public static WebDriver driver;
@@ -40,7 +64,6 @@ public class Keyword {
 	public static List<WebElement> elements;
 	public static AShot ashot;
 	public static Alert alert;
-
 	public static String parentwindowhandle;
 	public static Set<String> allindowhandles;
 	public static Logger log = Logger.getLogger(Keyword.class);
@@ -50,13 +73,15 @@ public class Keyword {
 	public static EventFiringWebDriver edriver;
 	public static WebEventListner eventlistener;
 
+	public static FluentWait wait;
+	public static WebDriverWait webdriverWait;
+
 
 	/*
 	 * This method will launch the given Browser
 	 * 
 	 */
 	public static void launchBrowser(String browserName) {
-
 		switch (browserName) {
 
 		case "Chrome":
@@ -75,7 +100,7 @@ public class Keyword {
 			System.out.println("Enter Correct browserName such as Chrome, IE or Firefox");
 			break;
 		}
-		
+
 		edriver = new EventFiringWebDriver(driver);
 		eventlistener = new WebEventListner();
 		edriver.register(eventlistener);
@@ -102,8 +127,8 @@ public class Keyword {
 	}
 
 	/*
-	 * This method will delete all the cookies i.e. the password, the id for all the
-	 * websites stored in the browser
+	 * This method will delete all the cookies i.e. the password, the id for all
+	 * the websites stored in the browser
 	 */
 	public static void deleteCookies() {
 
@@ -124,8 +149,8 @@ public class Keyword {
 	}
 
 	/*
-	 * This method will fetch the WebElement for which we have passed the locator
-	 * type and locator value
+	 * This method will fetch the WebElement for which we have passed the
+	 * locator type and locator value
 	 * 
 	 * @param:Accpets parameter as String locator Type
 	 * 
@@ -166,9 +191,9 @@ public class Keyword {
 	}
 
 	/*
-	 * This is a overloaded method for fetching the WebElement directly from the POM
-	 * Classes.We have to use the Object Reference of the respective POM class to
-	 * fetch the WebElement
+	 * This is a overloaded method for fetching the WebElement directly from the
+	 * POM Classes.We have to use the Object Reference of the respective POM
+	 * class to fetch the WebElement
 	 * 
 	 * @returns:WebElement from the POM Class
 	 */
@@ -178,8 +203,8 @@ public class Keyword {
 	}
 
 	/*
-	 * This method will fetch us the List of WebElement for which we have passed the
-	 * locator type and locator value
+	 * This method will fetch us the List of WebElement for which we have passed
+	 * the locator type and locator value
 	 * 
 	 * @param:Accepts parameter as locator type and locator value
 	 * 
@@ -217,8 +242,8 @@ public class Keyword {
 	}
 
 	/*
-	 * This method accepts WebElement Name which we have fetched in our POM Class
-	 * and returns List of WebElements
+	 * This method accepts WebElement Name which we have fetched in our POM
+	 * Class and returns List of WebElements
 	 * 
 	 * @Param:Accepts parameter as WebElement directly from our POM Class
 	 * 
@@ -257,9 +282,11 @@ public class Keyword {
 	}
 
 	/*
-	 * This method selects value from DropDown which is designed using Select tag
+	 * This method selects value from DropDown which is designed using Select
+	 * tag
 	 * 
-	 * @param:Accepts argument as WebElement for the value which we need to choose
+	 * @param:Accepts argument as WebElement for the value which we need to
+	 * choose
 	 * 
 	 * @Param:Accepts argument as 1 of three methods of Select Class
 	 * 
@@ -284,10 +311,11 @@ public class Keyword {
 		}
 	}
 	/*
-	 * This method captures screenshot for the viewport using Yandex AShot library
-	 * and returns the Image
+	 * This method captures screenshot for the viewport using Yandex AShot
+	 * library and returns the Image
 	 * 
-	 * @Param:Accepts parameter the file-format in which we need the output Image
+	 * @Param:Accepts parameter the file-format in which we need the output
+	 * Image
 	 * 
 	 * @Param:Accepts parameter as the location in which we want to save the
 	 * screenshot taken
@@ -304,10 +332,11 @@ public class Keyword {
 	}
 
 	/*
-	 * This method will capture the screenshot for the entire web-page by parsing it
+	 * This method will capture the screenshot for the entire web-page by
+	 * parsing it
 	 * 
-	 * @Param:Accepts int value as parameter i.e. the time in milliseconds for which
-	 * the web-page will be parsed
+	 * @Param:Accepts int value as parameter i.e. the time in milliseconds for
+	 * which the web-page will be parsed
 	 * 
 	 * @Param:Accepts parameter as the type of Image we want i.e. JPG or PNG
 	 * 
@@ -327,16 +356,16 @@ public class Keyword {
 	}
 
 	/*
-	 * This method will capture the screenshot for the WebElement of our interest
-	 * and which needs to be passed as a parameter
+	 * This method will capture the screenshot for the WebElement of our
+	 * interest and which needs to be passed as a parameter
 	 * 
 	 * @Param:Accepts WebElement as a parameter for which we want the screenshot
 	 * 
-	 * @Param:Accepts Image format as a parameter the type of format which we want
-	 * the image to be of
+	 * @Param:Accepts Image format as a parameter the type of format which we
+	 * want the image to be of
 	 * 
-	 * @Param:Accepts the parameter as location where we want our FileOutPut Stream
-	 * to be stored at
+	 * @Param:Accepts the parameter as location where we want our FileOutPut
+	 * Stream to be stored at
 	 */
 	public static Screenshot captureWebElementScreenshot(WebElement element, String formatName,
 			FileOutputStream filepath) throws IOException {
@@ -349,12 +378,12 @@ public class Keyword {
 	}
 
 	/*
-	 * This method will fetch the exact Y location (vertical location on the WebPage
-	 * for the stated WebElement)
+	 * This method will fetch the exact Y location (vertical location on the
+	 * WebPage for the stated WebElement)
 	 * 
-	 * @Param:Accepts parameter as WebElement as an argument for which we want the Y
-	 * Location The value we get has to be verified against the specification for
-	 * exact location of this WebElement
+	 * @Param:Accepts parameter as WebElement as an argument for which we want
+	 * the Y Location The value we get has to be verified against the
+	 * specification for exact location of this WebElement
 	 */
 	public static int getYLocation(WebElement element) {
 
@@ -365,15 +394,15 @@ public class Keyword {
 	}
 
 	/*
-	 * This method will fetch the exact X location (the horizontal location on the
-	 * WebPage for the stated WebElement)
+	 * This method will fetch the exact X location (the horizontal location on
+	 * the WebPage for the stated WebElement)
 	 * 
-	 * @Param:Accepts parameter as WebElement for which we want the exact X location
-	 * for
+	 * @Param:Accepts parameter as WebElement for which we want the exact X
+	 * location for
 	 * 
-	 * @returns:The int X location (The horizontal location which we need for the
-	 * WebElement of our interest ) The value we get has to be verified against the
-	 * specification for exact location of this WebElement
+	 * @returns:The int X location (The horizontal location which we need for
+	 * the WebElement of our interest ) The value we get has to be verified
+	 * against the specification for exact location of this WebElement
 	 */
 	public static int getXLocation(WebElement element) {
 		int x = element.getLocation().getX();
@@ -381,29 +410,89 @@ public class Keyword {
 	}
 
 	/*
-	 * This method will scroll the window by the length in pixel which is passed as
-	 * argument both horizontally and vertically To scroll the WebPage vertically
-	 * give i = 0;
+	 * This method will scroll the window by the length in pixel which is passed
+	 * as argument both horizontally and vertically To scroll the WebPage
+	 * vertically give i = 0;
 	 * 
-	 * @Param:Takes argument as int value j i.e. the length in pixel value by which
-	 * the WebPage will be scrolled vertically
+	 * @Param:Takes argument as int value j i.e. the length in pixel value by
+	 * which the WebPage will be scrolled vertically
 	 * 
-	 * @Param:Takes argument as int value i i.e. the length in pixel value by which
-	 * the WebPage will be scrolled horizontally
+	 * @Param:Takes argument as int value i i.e. the length in pixel value by
+	 * which the WebPage will be scrolled horizontally
 	 */
 	public static void scrolltheWebPage(int i, int j) {
 		JavascriptExecutor js = (JavascriptExecutor) driver;
 		js.executeScript("window.scrollBy(i,j)");
 	}
 
-	/*
-	 * This method will apply implicit wait to the current instance of the driver
+	/**
+	 * This method will scroll the window till end of webpage.
 	 * 
-	 * @Param:This method accepts argument int value as time in seconds for which
-	 * the thread will wait
+	 * @author chirde sampada
+	 * @param
+	 */
+	public static void scrollWebPageBottom() {
+		JavascriptExecutor js = (JavascriptExecutor) driver;
+		js.executeScript("window.scrollTo(0,document.body.scrollHeight)");
+	}
+
+	/**
+	 * This method will scroll the window till VisibleElement of webpage.
+	 * 
+	 * @author chirde sampada
+	 * @param WebElement
+	 */
+	public static void scrollByVisibleElement(WebElement element) {
+		JavascriptExecutor js = (JavascriptExecutor) driver;
+		js.executeScript("arguments[0].scrollIntoView();", element);
+	}
+
+	/*
+	 * This method will apply implicit wait to the current instance of the
+	 * driver i
+	 * 
+	 * @Param:This method accepts argument int value as time in seconds for
+	 * which the thread will wait
 	 */
 	public static void implicitWait(int timeinSeconds) {
 		driver.manage().timeouts().implicitlyWait(timeinSeconds, TimeUnit.SECONDS);
+	}
+
+	/**
+	 * This method will help to apply customize wait on any element
+	 * 
+	 * @param :
+	 *            timeInSeconds
+	 * @author chirde sampada
+	 */
+	public static void explicitWait(int timeInSeconds) {
+		wait = new FluentWait(driver);
+		wait.withTimeout(timeInSeconds, TimeUnit.SECONDS);
+	}
+
+	/**
+	 * An expectation for checking that an element is present on the DOM of a
+	 * page and visible. Visibility means that the element is not only displayed
+	 * but also has a height and width that is greater than 0.
+	 *
+	 * @param elementname
+	 *            used to find the element
+	 * @author chirde sampada
+	 */
+	public static void waitUntilVisibilityOf(WebElement elementname) {
+		wait.until(ExpectedConditions.visibilityOf(elementname));
+	}
+
+	/**
+	 * This method will help to poll every provided seconds
+	 * 
+	 * @param timeunitSeconds
+	 * @author chirde sampada
+	 * 
+	 */
+	public static void pollingEvery(int timeInSeconds) {
+		wait = new FluentWait(driver);
+		wait.pollingEvery(timeInSeconds, TimeUnit.SECONDS);
 	}
 
 	/*
@@ -415,15 +504,17 @@ public class Keyword {
 	}
 
 	/*
-	 * This method will close all the windows which the driver instance has opened
+	 * This method will close all the windows which the driver instance has
+	 * opened
 	 * 
 	 * 
 	 */
 	public static void closeAllWindows() {
 		driver.quit();
 	}
+
 	/*
-	 * This method will switch the WebDriver instance to new pop-up window 
+	 * This method will switch the WebDriver instance to new pop-up window
 	 */
 	public void switchToPopupWindow() {
 		parentwindowhandle = driver.getWindowHandle();
@@ -437,8 +528,11 @@ public class Keyword {
 	}
 
 	/*
-	 * This method will switch the WebDriver instance to new pop-up window having specific title 
-	 * @Params : Accept String(window title) as a parameter for which we want to switch the WebDriver
+	 * This method will switch the WebDriver instance to new pop-up window
+	 * having specific title
+	 * 
+	 * @Params : Accept String(window title) as a parameter for which we want to
+	 * switch the WebDriver
 	 */
 	public void switchToPopupWindow(String windowtitle) {
 		parentwindowhandle = driver.getWindowHandle();
@@ -450,9 +544,9 @@ public class Keyword {
 			}
 		}
 	}
-	
+
 	/*
-	 * This method will switch the WebDriver instance to parent window 
+	 * This method will switch the WebDriver instance to parent window
 	 */
 	public void switchToMainWindow() {
 		driver.switchTo().window(parentwindowhandle);
