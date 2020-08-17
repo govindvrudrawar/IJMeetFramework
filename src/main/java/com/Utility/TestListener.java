@@ -34,7 +34,6 @@ public class TestListener extends Keyword implements ITestListener {
 	@Override
 	public void onTestFailure(ITestResult result) {
 		System.out.println("Test Case Execution Failed : " + result.getName());
-
 		extentLog.log(Status.FAIL, "Failed TestCase: " + result.getName());
 		String failedTCScreenshotPath = screenshotforExtentReport(driver, result.getName());
 		try {
@@ -59,33 +58,30 @@ public class TestListener extends Keyword implements ITestListener {
 
 	}
 
-	//@BeforeTest
 	@Override
 	public void onStart(ITestContext context) {
 		htmlReporter = new ExtentHtmlReporter(System.getProperty("user.dir") + "/ExtentReport/" + "ExtentReport.html");
 		extent = new ExtentReports();
 		extent.attachReporter(htmlReporter);
-		extent.setSystemInfo("Project", "Guru99Ecom");
-		tempextentLog=extent.createTest("Bhushan Test");
+		extent.setSystemInfo("Project", "IJMeet");
+		tempextentLog = extent.createTest("Temporary Test");
 		tempextentLog.log(Status.PASS, "Bhushan");
 	}
 
-	
 	@Override
 	public void onFinish(ITestContext context) {
 		System.out.println("remove testlog");
 		extent.removeTest(tempextentLog);
 		extent.flush();
 	}
-	
+
 	public String screenshotforExtentReport(WebDriver driver, String tcName) {
 		DateFormat dateFormat = new SimpleDateFormat("dd-MM-YY hh-mm-ss");
 		Date date = new Date();
 		String datetime = dateFormat.format(date);
 
-		String screenshotPath = System.getProperty("user.dir")+"\\Screenshots\\" + tcName
-				+ " dated " + datetime + ".png";
-
+		String screenshotPath = System.getProperty("user.dir") + "\\Screenshots\\" + tcName + " dated " + datetime
+				+ ".png";
 		TakesScreenshot ts = (TakesScreenshot) driver;
 		File source = ts.getScreenshotAs(OutputType.FILE);
 		try {

@@ -105,74 +105,65 @@ public class WebEventListner extends Keyword implements WebDriverEventListener {
 
 	@Override
 	public void afterClickOn(WebElement element, WebDriver driver) {
-	//	log.info("Clicked on "+element.getText()+" "+element.getTagName());
-				
+	//	log.info("Clicked on "+element.getText()+" "+element.getTagName());			
 	}
 
 	@Override
 	public void beforeChangeValueOf(WebElement element, WebDriver driver, CharSequence[] keysToSend) {
-		log.info("Inside the beforeChangeValueOf method");
-		
-	}
+		log.info("Before Change the value of "+element.getText()+" from "+keysToSend);
+			}
 
 	@Override
 	public void afterChangeValueOf(WebElement element, WebDriver driver, CharSequence[] keysToSend) {
-		// TODO Auto-generated method stub
+		log.info("After Change the value of "+element.getText()+" as "+keysToSend);
 		
 	}
 
 	@Override
 	public void beforeScript(String script, WebDriver driver) {
-		// TODO Auto-generated method stub
-		
+		log.info("Trying to execute script :"+script);
 	}
 
 	@Override
 	public void afterScript(String script, WebDriver driver) {
-		// TODO Auto-generated method stub
-		
+		log.info("Script exeuted :"+script);
 	}
 
 	@Override
 	public void beforeSwitchToWindow(String windowName, WebDriver driver) {
-		// TODO Auto-generated method stub
-		
+		log.info("Trying to switch on window : "+windowName);
 	}
 
 	@Override
 	public void afterSwitchToWindow(String windowName, WebDriver driver) {
-		// TODO Auto-generated method stub
-		
+		log.info("Switch on window : "+windowName);
 	}
 
 	@Override
 	public void onException(Throwable throwable, WebDriver driver) {
-		// TODO Auto-generated method stub
-		
+		log.info("Exception received as "+ throwable.getMessage());
 	}
 
 	@Override
 	public <X> void beforeGetScreenshotAs(OutputType<X> target) {
-		// TODO Auto-generated method stub
+		log.info("Trying to get screenshot of : "+target.toString());
 		
 	}
 
 	@Override
 	public <X> void afterGetScreenshotAs(OutputType<X> target, X screenshot) {
-		// TODO Auto-generated method stub
+		log.info("Taking screenshot succesfully");
 		
 	}
 
 	@Override
 	public void beforeGetText(WebElement element, WebDriver driver) {
-		// TODO Auto-generated method stub
-		
+		log.info("Trying to read text from : "+element.getTagName());
 	}
 
 	@Override
 	public void afterGetText(WebElement element, WebDriver driver, String text) {
-		// TODO Auto-generated method stub
-		
+		log.info("Read text from : "+text+" from "+element.getTagName());
 	}
 
 }
