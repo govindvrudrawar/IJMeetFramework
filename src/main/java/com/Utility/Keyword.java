@@ -23,8 +23,10 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.opencsv.CSVReader;
 
@@ -44,7 +46,8 @@ public class Keyword {
 	public static AShot ashot;
 	public static Alert alert;
 	public static FluentWait wait;
-
+   public static  WebDriverWait webdriverWait;
+	
 	/*
 	 * This method will launch the given Browser
 	 * 
@@ -394,29 +397,13 @@ public class Keyword {
 		JavascriptExecutor js = (JavascriptExecutor) driver;
 		js.executeScript("window.scrollTo(0,document.body.scrollHeight)");		
 	}
-	/**
-	 * This code will read data in csv file 
-	 * @param 
-	 * @throws IOException 
+	/**This method will scroll the window till VisibleElement of webpage.
 	 * @author chirde sampada
-	 * @return 
-	 * @return 
+	 * @param WebElement
 	 */
-	public static  List<String[]> csvCodeReader(String path) throws IOException {
-		
-//	String path="C:\\Users\\chirde adit\\Desktop\\SAMPADA.csv";
-	
-	Reader reader=new FileReader(path);
-	CSVReader csvreader=new CSVReader(reader);
-	List<String[]>data =csvreader.readAll();
-	for(String []d:data)
-	{
-		for(String c:d){
-			System.out.println(c);
-		}
-	}
-	return data;
-	
+	public static void scrollByVisibleElement(WebElement element) {
+		JavascriptExecutor js = (JavascriptExecutor) driver;
+	js.executeScript("arguments[0].scrollIntoView();", element);
 	}
 	
 	/*
@@ -428,7 +415,38 @@ public class Keyword {
 	public static void implicitWait(int timeinSeconds) {
 		driver.manage().timeouts().implicitlyWait(timeinSeconds, TimeUnit.SECONDS);
 	}
+/**
+ * This method will help to apply customize wait on any element
+ * @param : timeInSeconds 
+ * @author chirde sampada
+ */
+	public static void explicitWait(int timeInSeconds) {
+		wait = new FluentWait(driver);
+		wait.withTimeout(timeInSeconds, TimeUnit.SECONDS);
+	}
 
+	/**
+	 * An expectation for checking that an element is present on the DOM of a page
+	 * and visible. Visibility means that the element is not only displayed but also
+	 * has a height and width that is greater than 0.
+	 *
+	 * @param elementname used to find the element
+	 * @author chirde sampada
+	 */
+	public static void waitUntilVisibilityOf(WebElement elementname) {
+		wait.until(ExpectedConditions.visibilityOf(elementname));
+	}
+	/**
+	 * This method will help to poll every provided seconds
+	 * @param timeunitSeconds
+	 * @author chirde sampada 
+	 * 
+	 */
+	public static void pollingEvery(int timeInSeconds) {
+		wait = new FluentWait(driver);
+		wait.pollingEvery(timeInSeconds,TimeUnit.SECONDS);
+		}
+	
 	/*
 	 * This method will close the current window to which the driver instance is
 	 * pointing to
