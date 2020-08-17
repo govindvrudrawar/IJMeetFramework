@@ -1,5 +1,6 @@
 package com.Utility;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -66,9 +67,10 @@ public class AccessUtilityFile {
 	 * This is a method regarding reading CSV file.
 	 * @param It accepts parameter as String path
 	 * @author chirde Sampada
+	 * @throws FileNotFoundException 
 	 */
-	public void csvFileReader(String path) {
-		Scanner sc=new Scanner(System.in);
+	public void csvFileReader(String path) throws FileNotFoundException {
+		Scanner sc=new Scanner(new File(path));
 		sc.useDelimiter(","); //sets delimiter pattern
 		while(sc.hasNext())
 		{
@@ -82,14 +84,6 @@ public class AccessUtilityFile {
 	
 	
 }
-
-
-
-
-
-
-
-
 
 
 
