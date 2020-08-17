@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results skipped="0" failed="0" ignored="0" total="1" passed="1">
+  <reporter-output>
+  </reporter-output>
+  <suite name="Default suite" duration-ms="378" started-at="2020-08-15T19:23:02 IST" finished-at="2020-08-15T19:23:02 IST">
+    <groups>
+    </groups>
+    <test name="Default test" duration-ms="378" started-at="2020-08-15T19:23:02 IST" finished-at="2020-08-15T19:23:02 IST">
+      <class name="com.ijmeet.HomepageTest">
+        <test-method status="PASS" signature="TC01()[pri:0, instance:com.ijmeet.HomepageTest@1c3a4799]" name="TC01" duration-ms="51" started-at="2020-08-15T19:23:02 IST" finished-at="2020-08-15T19:23:02 IST">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- TC01 -->
+      </class> <!-- com.ijmeet.HomepageTest -->
+    </test> <!-- Default test -->
+  </suite> <!-- Default suite -->
+</testng-results>
