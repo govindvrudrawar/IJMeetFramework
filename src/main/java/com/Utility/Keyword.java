@@ -1,8 +1,11 @@
 package com.Utility;
 
 import java.awt.image.BufferedImage;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.time.Duration;
 import java.util.List;
 
@@ -28,10 +31,15 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.events.EventFiringWebDriver;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Select;
+
+import com.opencsv.CSVReader;
+
+
 import org.testng.annotations.Listeners;
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
+
 import io.github.bonigarcia.wdm.WebDriverManager;
 import ru.yandex.qatools.ashot.AShot;
 import ru.yandex.qatools.ashot.Screenshot;
@@ -405,9 +413,42 @@ public class Keyword {
 		js.executeScript("window.scrollBy(i,j)");
 	}
 
+	/**This method will scroll the window till end of webpage.
+	 * @author chirde sampada
+	 * @param 
+	 */
+	public static void scrollWebPageBottom() {
+		JavascriptExecutor js = (JavascriptExecutor) driver;
+		js.executeScript("window.scrollTo(0,document.body.scrollHeight)");		
+	}
+	/**
+	 * This code will read data in csv file 
+	 * @param 
+	 * @throws IOException 
+	 * @author chirde sampada
+	 * @return 
+	 * @return 
+	 */
+	public static  List<String[]> csvCodeReader(String path) throws IOException {
+		
+//	String path="C:\\Users\\chirde adit\\Desktop\\SAMPADA.csv";
+	
+	Reader reader=new FileReader(path);
+	CSVReader csvreader=new CSVReader(reader);
+	List<String[]>data =csvreader.readAll();
+	for(String []d:data)
+	{
+		for(String c:d){
+			System.out.println(c);
+		}
+	}
+	return data;
+	
+	}
+	
 	/*
 	 * This method will apply implicit wait to the current instance of the driver
-	 * 
+	 * i
 	 * @Param:This method accepts argument int value as time in seconds for which
 	 * the thread will wait
 	 */
@@ -431,6 +472,7 @@ public class Keyword {
 	public static void closeAllWindows() {
 		driver.quit();
 	}
+
 	/*
 	 * This method will switch the WebDriver instance to new pop-up window 
 	 */
