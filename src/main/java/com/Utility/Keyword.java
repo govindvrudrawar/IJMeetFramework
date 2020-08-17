@@ -71,7 +71,7 @@ public class Keyword {
 	public static ExtentReports extent;
 	public static ExtentTest extentLog, tempextentLog;
 	public static EventFiringWebDriver edriver;
-	public static WebEventListner eventlistener;
+	//public static WebEventListner eventlistener;
 
 	public static FluentWait wait;
 	public static WebDriverWait webdriverWait;
