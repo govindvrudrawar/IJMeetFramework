@@ -8,11 +8,15 @@ import java.io.IOException;
 import java.io.Reader;
 import java.time.Duration;
 import java.util.List;
+
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
+
 
 import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageOutputStream;
 
+import org.apache.log4j.Logger;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -23,17 +27,25 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.interactions.Actions;
+
+import org.openqa.selenium.support.events.EventFiringWebDriver;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Select;
 
 import com.opencsv.CSVReader;
 
+
+import org.testng.annotations.Listeners;
+import com.aventstack.extentreports.ExtentReports;
+import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
+
 import io.github.bonigarcia.wdm.WebDriverManager;
 import ru.yandex.qatools.ashot.AShot;
 import ru.yandex.qatools.ashot.Screenshot;
 import ru.yandex.qatools.ashot.shooting.ShootingStrategies;
-import ru.yandex.qatools.ashot.shooting.ShootingStrategy;
 
+@Listeners(com.Utility.TestListener.class)
 public class Keyword {
 
 	public static WebDriver driver;
@@ -43,7 +55,18 @@ public class Keyword {
 	public static List<WebElement> elements;
 	public static AShot ashot;
 	public static Alert alert;
+
+	public static String parentwindowhandle;
+	public static Set<String> allindowhandles;
+	public static Logger log = Logger.getLogger(Keyword.class);
+	public static ExtentHtmlReporter htmlReporter;
+	public static ExtentReports extent;
+	public static ExtentTest extentLog, tempextentLog;
+	public static EventFiringWebDriver edriver;
+	public static WebEventListner eventlistener;
+
 	public static FluentWait wait;
+
 
 	/*
 	 * This method will launch the given Browser
@@ -68,8 +91,12 @@ public class Keyword {
 			System.err.print("The Entered " + browserName + "is incorrect");
 			System.out.println("Enter Correct browserName such as Chrome, IE or Firefox");
 			break;
-
 		}
+		
+		edriver = new EventFiringWebDriver(driver);
+		eventlistener = new WebEventListner();
+		edriver.register(eventlistener);
+		driver = edriver;
 	}
 
 	/*
@@ -445,4 +472,42 @@ public class Keyword {
 	public static void closeAllWindows() {
 		driver.quit();
 	}
+
+	/*
+	 * This method will switch the WebDriver instance to new pop-up window 
+	 */
+	public void switchToPopupWindow() {
+		parentwindowhandle = driver.getWindowHandle();
+		allindowhandles = driver.getWindowHandles();
+		for (String window : allindowhandles) {
+			if (!driver.switchTo().window(window).getWindowHandle().equals(parentwindowhandle)) {
+				log.info("Switched to " + driver.getTitle() + " window");
+				break;
+			}
+		}
+	}
+
+	/*
+	 * This method will switch the WebDriver instance to new pop-up window having specific title 
+	 * @Params : Accept String(window title) as a parameter for which we want to switch the WebDriver
+	 */
+	public void switchToPopupWindow(String windowtitle) {
+		parentwindowhandle = driver.getWindowHandle();
+		allindowhandles = driver.getWindowHandles();
+		for (String window : allindowhandles) {
+			if (driver.switchTo().window(window).getTitle().contains(windowtitle)) {
+				log.info("Switched to " + driver.getTitle() + " window");
+				break;
+			}
+		}
+	}
+	
+	/*
+	 * This method will switch the WebDriver instance to parent window 
+	 */
+	public void switchToMainWindow() {
+		driver.switchTo().window(parentwindowhandle);
+		log.info("Switching to main window");
+	}
+
 }
