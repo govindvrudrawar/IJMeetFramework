@@ -11,7 +11,8 @@ import java.io.IOException;
 
 import java.io.Reader;
 import java.time.Duration;
-
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -292,6 +293,50 @@ public class Keyword {
 
 		}
 	}
+	
+	/*
+	 * This Method will verify if menu(nav) items present. actual menu items stored
+	 * in {@code List}. {@code ArrayList} used to get element of list in the form of
+	 * array to compare with expected menu items.
+	 * 
+	 * @param subNavItems {@code List} it is list of {@param locatorValue} find by
+	 * {@param locatorType} such as by ID,cssSelector,XPATH,NAME,etc
+	 * 
+	 * @param actualSubNavItems {@code ArrayList}
+	 * 
+	 * @param itr {@code Iterator}
+	 * 
+	 * @return {@link ArrayList} actualSubNavItems
+	 */
+	public static ArrayList<String> verifyMenuItems(String locatorType, String locatorValue) {
+
+		List<WebElement> subNavItems = getWebElements(locatorType, locatorValue);
+		ArrayList<String> actualSubNavItems = new ArrayList<String>();
+		Iterator<WebElement> itr = subNavItems.iterator();
+		while (itr.hasNext()) {
+			actualSubNavItems.add(itr.next().getText());
+		}
+		return actualSubNavItems;
+	}
+
+	/*
+	 * This method will get text from auto pop-up List while entering key text.
+	 * 
+	 * @param enterText
+	 */
+	public static void autoCompleteText(String locatorType, String locatorValue, String enterText) {
+
+		List<WebElement> optionToSelect = getWebElements(locatorType, locatorValue);
+
+		for (WebElement selectOptionFromList : optionToSelect) {
+			// Enter the expected text in text box @param enterText
+			if (selectOptionFromList.getText().equalsIgnoreCase(enterText)) {
+				selectOptionFromList.click();
+				break;
+			}
+		}
+	}
+
 	/*
 	 * This method captures screenshot for the viewport using Yandex AShot
 	 * library and returns the Image
@@ -435,6 +480,47 @@ public class Keyword {
 	 * @Param:This method accepts argument int value as time in seconds for
 	 * which the thread will wait
 	 */
+	
+	/*
+	 * This method will switch the WebDriver instance to new pop-up window
+	 */
+	public void switchToPopupWindow() {
+		Constants.parentwindowhandle = Constants.driver.getWindowHandle();
+		Constants.allindowhandles = Constants.driver.getWindowHandles();
+		for (String window : Constants.allindowhandles) {
+			if (!Constants.driver.switchTo().window(window).getWindowHandle().equals(Constants.parentwindowhandle)) {
+				Constants.log.info("Switched to " + Constants.driver.getTitle() + " window");
+				break;
+			}
+		}
+	}
+
+	/*
+	 * This method will switch the WebDriver instance to new pop-up window
+	 * having specific title
+	 * 
+	 * @Params : Accept String(window title) as a parameter for which we want to
+	 * switch the WebDriver
+	 */
+	public void switchToPopupWindow(String windowtitle) {
+		Constants.parentwindowhandle = Constants.driver.getWindowHandle();
+		Constants.allindowhandles = Constants.driver.getWindowHandles();
+		for (String window : Constants.allindowhandles) {
+			if (Constants.driver.switchTo().window(window).getTitle().contains(windowtitle)) {
+				Constants.log.info("Switched to " + Constants.driver.getTitle() + " window");
+				break;
+			}
+		}
+	}
+
+	/*
+	 * This method will switch the WebDriver instance to parent window
+	 */
+	public void switchToMainWindow() {
+		Constants.driver.switchTo().window(Constants.parentwindowhandle);
+		Constants.log.info("Switching to main window");
+	}
+
 	public static void implicitWait(int timeinSeconds) {
 		Constants.driver.manage().timeouts().implicitlyWait(timeinSeconds, TimeUnit.SECONDS);
 	}
@@ -475,6 +561,37 @@ public class Keyword {
 		Constants.wait = new FluentWait(Constants.driver);
 		Constants.wait.pollingEvery(timeInSeconds, TimeUnit.SECONDS);
 	}
+	
+	/*
+	 * This method will use to apply wait using thread in msec
+	 */
+	public static void applyWait(int waitInmsec) {
+		try {
+			Thread.sleep(waitInmsec);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/*
+	 * This method will used get boolean value when alert is present then switch to
+	 * alert alert, accept it and returns true otherwise it returns false.
+	 */
+	public static boolean ifAlert() {
+		try {
+			Constants.driver.switchTo().alert().accept();
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	/*
+	 * This method will refresh the page whenever needed.
+	 */
+	public static void refreshPage() {
+		Constants.driver.navigate().refresh();
+	}
 
 	/*
 	 * This method will close the current window to which the driver instance is
@@ -492,46 +609,6 @@ public class Keyword {
 	 */
 	public static void closeAllWindows() {
 		Constants.driver.quit();
-	}
-
-	/*
-	 * This method will switch the WebDriver instance to new pop-up window
-	 */
-	public void switchToPopupWindow() {
-		Constants.parentwindowhandle = Constants.driver.getWindowHandle();
-		Constants.allindowhandles = Constants.driver.getWindowHandles();
-		for (String window : Constants.allindowhandles) {
-			if (!Constants.driver.switchTo().window(window).getWindowHandle().equals(Constants.parentwindowhandle)) {
-				Constants.log.info("Switched to " + Constants.driver.getTitle() + " window");
-				break;
-			}
-		}
-	}
-
-	/*
-	 * This method will switch the WebDriver instance to new pop-up window
-	 * having specific title
-	 * 
-	 * @Params : Accept String(window title) as a parameter for which we want to
-	 * switch the WebDriver
-	 */
-	public void switchToPopupWindow(String windowtitle) {
-		Constants.parentwindowhandle = Constants.driver.getWindowHandle();
-		Constants.allindowhandles = Constants.driver.getWindowHandles();
-		for (String window : Constants.allindowhandles) {
-			if (Constants.driver.switchTo().window(window).getTitle().contains(windowtitle)) {
-				Constants.log.info("Switched to " + Constants.driver.getTitle() + " window");
-				break;
-			}
-		}
-	}
-
-	/*
-	 * This method will switch the WebDriver instance to parent window
-	 */
-	public void switchToMainWindow() {
-		Constants.driver.switchTo().window(Constants.parentwindowhandle);
-		Constants.log.info("Switching to main window");
 	}
 
 }
